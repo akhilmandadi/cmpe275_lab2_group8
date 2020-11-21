@@ -1,6 +1,5 @@
 /target/
 .idea/workspace.xml
-*.xml
 cmpe275.iml
 .git/
 .idea/
