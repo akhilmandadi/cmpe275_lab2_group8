@@ -11,15 +11,15 @@ public class PlayerShallowForm {
 	private String description;
 	private Address address;
 
-//	public PlayerShallowForm(Long id, String firstname, String lastName, String email, String description,
-//			Address address) {
-//		this.id = id;
-//		this.firstname = firstname;
-//		this.lastname = lastName;
-//		this.email = email;
-//		this.description = description;
-//		this.address = address;
-//	}
+	public PlayerShallowForm(Long id, String firstname, String lastName, String email, String description,
+			Address address) {
+		this.id = id;
+		this.firstname = firstname;
+		this.lastname = lastName;
+		this.email = email;
+		this.description = description;
+		this.address = address;
+	}
 
 	public PlayerShallowForm() {
 

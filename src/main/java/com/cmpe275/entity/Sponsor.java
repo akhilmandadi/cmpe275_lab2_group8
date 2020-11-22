@@ -9,7 +9,7 @@ public class Sponsor implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	int id;
+	long id;
 
 	private String name;
 	private String description;
@@ -18,7 +18,7 @@ public class Sponsor implements Serializable {
 	@OneToMany(mappedBy = "sponsor")
 	private List<Player> players;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 

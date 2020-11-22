@@ -25,7 +25,7 @@ public class Player {
 	@ManyToOne
 	(fetch = FetchType.LAZY)
 	private Sponsor sponsor;
-	
+
 	@ManyToMany
 	private List<Player> opponents;
 	
