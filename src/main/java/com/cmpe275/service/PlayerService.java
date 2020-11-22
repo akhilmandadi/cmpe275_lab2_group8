@@ -84,7 +84,7 @@ public class PlayerService {
 				if (sponsorRepo.getById(sponsorId).isPresent()) {
 					player.setSponsor(sponsorRepo.getById(sponsorId).get());
 				} else {
-					throw new CustomException("Sponsor doesnt exist with given name", HttpStatus.BAD_REQUEST);
+					throw new CustomException("Sponsor doesnt exist with given id", HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch (CustomException e) {
@@ -131,11 +131,13 @@ public class PlayerService {
 			player.setAddress(address);
 
 			if (req.getParameter("sponsor") != null) {
-				String sponsorName = req.getParameter("sponsor");
-				if (sponsorRepo.findByName(sponsorName).isPresent()) {
-					player.setSponsor(sponsorRepo.findByName(sponsorName).get());
+				Long sponsorId = Long.parseLong(req.getParameter("sponsor"));
+				System.out.println(sponsorId);
+				System.out.println(sponsorId.getClass().getName());
+				if (sponsorRepo.getById(sponsorId).isPresent()) {
+					player.setSponsor(sponsorRepo.getById(sponsorId).get());
 				} else {
-					throw new CustomException("Sponsor doesnt exist with given name", HttpStatus.BAD_REQUEST);
+					throw new CustomException("Sponsor doesnt exist with given id", HttpStatus.BAD_REQUEST);
 				}
 			}
 		} catch (CustomException e) {
@@ -152,7 +154,7 @@ public class PlayerService {
 		try {
 			player = checkPlayerIsExisting(req,id);
 			Player p = playerRepo.save(player);
-			return new ResponseEntity<>(p, HttpStatus.OK);
+			return new ResponseEntity<>(convertPlayerObjectToDeepForm(p), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
 		} catch (Exception e) {
