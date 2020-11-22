@@ -27,6 +27,19 @@ public class APIValidation {
 		}
 	}
 	
+	@Before("execution(public * com.cmpe275.controller.PlayerController.updatePlayer(..)) && args(request)")
+	public void ValidateUpdatePlayerAPI(JoinPoint joinPoint, HttpServletRequest request) {
+		if (request.getParameter("email") == null || request.getParameter("email") == "") {
+			throw new ValidationException("Email is missing which is required parameter.");
+		}
+		if (request.getParameter("firstname") == null || request.getParameter("firstname") == "") {
+			throw new ValidationException("Firstname is missing which is required parameter.");
+		}
+		if (request.getParameter("lastname") == null || request.getParameter("lastname") == "") {
+			throw new ValidationException("Lastname is missing which is required parameter.");
+		}
+	}
+	
 	@Before("execution(public * com.cmpe275.controller.SponsorController.createSponsor(..)) && args(request)")
 	public void ValidateCreateSponsorAPI(JoinPoint joinPoint, HttpServletRequest request) {
 		if (request.getParameter("name") == null || request.getParameter("name") == "") {
