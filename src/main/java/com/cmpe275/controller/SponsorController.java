@@ -25,5 +25,8 @@ public class SponsorController {
 		return SponsorService.getSponsorById((long) id);
 	}
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteSponsor(HttpServletRequest request, @PathVariable("id") long id) {
+		return SponsorService.deleteSponsorById((long) id);
+	}
 }

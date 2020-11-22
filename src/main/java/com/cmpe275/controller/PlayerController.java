@@ -27,5 +27,9 @@ public class PlayerController {
 	public ResponseEntity<Object> getPlayer(HttpServletRequest request, @PathVariable("id") long id) {
 		return playerService.getPlayerById((long) id);
 	}
-
+    
+   @DeleteMapping("/{id}")
+	public ResponseEntity<Object> deletePlayer(HttpServletRequest request, @PathVariable("id") long id) {
+			return playerService.deletePlayerById((long) id);
+    }
 }

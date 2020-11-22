@@ -116,6 +116,27 @@ public class SponsorService {
 			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	public ResponseEntity<Object> deleteSponsorById(Long sponsorId) {
+		try {
+			if (sponsorId == null)
+				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+			Optional<Sponsor> sponsor = sponsorRepo.findById(sponsorId);
+			if (!sponsor.isPresent()) {
+				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+			} else {
+				SponsorDeepForm temp=convertSponsorObjectToDeepForm(sponsor.get());
+				sponsorRepo.deleteById(sponsorId);
+				return new ResponseEntity<>(temp, HttpStatus.OK);
+			}
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
+		} catch (Exception e) {
+			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
 
 
 }

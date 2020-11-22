@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import com.cmpe275.Exception.CustomException;
 import com.cmpe275.entity.Address;
 import com.cmpe275.entity.Player;
+import com.cmpe275.entity.Sponsor;
 import com.cmpe275.models.PlayerDeepForm;
 import com.cmpe275.models.PlayerShallowForm;
+import com.cmpe275.models.SponsorDeepForm;
 import com.cmpe275.models.SponsorShallowForm;
 import com.cmpe275.repo.PlayerRepo;
 import com.cmpe275.repo.SponsorRepo;
@@ -128,6 +130,24 @@ public class PlayerService {
 				return new ResponseEntity<>("Player Id Invalid", HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity<>(convertPlayerObjectToDeepForm(player.get()), HttpStatus.OK);
+			}
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
+		} catch (Exception e) {
+			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
+		}
+	}
+	public ResponseEntity<Object> deletePlayerById(Long playerId) {
+		try {
+			if (playerId == null)
+				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+			Optional<Player> player = playerRepo.findById(playerId);
+			if (!player.isPresent()) {
+				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+			} else {
+				PlayerDeepForm temp=convertPlayerObjectToDeepForm(player.get());
+				playerRepo.deleteById(playerId);
+				return new ResponseEntity<>(temp, HttpStatus.OK);
 			}
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
