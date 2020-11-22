@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class SponsorDeepForm {
-	private int id;
+	private long id;
 	private String name;
 	private String description;
 	private Address address;
@@ -23,7 +23,7 @@ public class SponsorDeepForm {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

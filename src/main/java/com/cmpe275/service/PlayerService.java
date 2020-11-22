@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import com.cmpe275.Exception.CustomException;
 import com.cmpe275.entity.Address;
 import com.cmpe275.entity.Player;
+import com.cmpe275.entity.Sponsor;
 import com.cmpe275.models.PlayerDeepForm;
 import com.cmpe275.models.PlayerShallowForm;
+import com.cmpe275.models.SponsorDeepForm;
 import com.cmpe275.models.SponsorShallowForm;
 import com.cmpe275.repo.PlayerRepo;
 import com.cmpe275.repo.SponsorRepo;
@@ -76,9 +78,11 @@ public class PlayerService {
 			player.setAddress(address);
 
 			if (req.getParameter("sponsor") != null) {
-				String sponsorName = req.getParameter("sponsor");
-				if (sponsorRepo.findByName(sponsorName).isPresent()) {
-					player.setSponsor(sponsorRepo.findByName(sponsorName).get());
+				Long sponsorId = Long.parseLong(req.getParameter("sponsor"));
+				System.out.println(sponsorId);
+				System.out.println(sponsorId.getClass().getName());
+				if (sponsorRepo.getById(sponsorId).isPresent()) {
+					player.setSponsor(sponsorRepo.getById(sponsorId).get());
 				} else {
 					throw new CustomException("Sponsor doesnt exist with given name", HttpStatus.BAD_REQUEST);
 				}
@@ -136,4 +140,32 @@ public class PlayerService {
 		}
 	}
 	
+	public ResponseEntity<Object> deletePlayerById(Long playerId) {
+		try {
+			if (playerId == null)
+				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+			Optional<Player> player = playerRepo.findById(playerId);
+			if (!player.isPresent()) {
+				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+			} else {
+				PlayerDeepForm temp=convertPlayerObjectToDeepForm(player.get());
+				if (player.get().getOpponents()!= null) {
+					player.get().getOpponents().forEach((p) -> {
+						p.getOpponents().remove(player.get());
+						playerRepo.save(p);
+					});    
+				}
+				if(player.get().getSponsor()!=null && player.get().getSponsor().getPlayers()!= null) {
+					player.get().getSponsor().getPlayers().remove(player.get());
+						sponsorRepo.save(player.get().getSponsor());  
+				}
+				playerRepo.deleteById(playerId);
+				return new ResponseEntity<>(temp, HttpStatus.OK);
+			}
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
+		} catch (Exception e) {
+			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
+		}
+	}
 }
