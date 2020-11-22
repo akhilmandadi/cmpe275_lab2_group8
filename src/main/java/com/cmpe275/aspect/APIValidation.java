@@ -27,7 +27,7 @@ public class APIValidation {
 		}
 	}
 	
-	@Before("execution(public * com.cmpe275.controller.SponsorController.createSponsor(..)) && args(request)")
+	@Before("execution(public * com.cmpe275.controller.SponsorController.createSponsor(..)) && args(request) || execution(public * com.cmpe275.controller.SponsorController.updateSponsor(..)) && args(request)")
 	public void ValidateCreateSponsorAPI(JoinPoint joinPoint, HttpServletRequest request) {
 		if (request.getParameter("name") == null || request.getParameter("name") == "") {
 			throw new ValidationException("Sponsor name is missing which is required parameter.");

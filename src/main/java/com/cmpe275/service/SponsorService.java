@@ -68,18 +68,6 @@ public class SponsorService {
 		}
 		return sponsor;
 	}
-	public ResponseEntity<Object> getSponsor(HttpServletRequest req) {
-		Sponsor sponsor;
-		try {
-			sponsor = buildSponsorFromData(req);
-			Sponsor s = sponsorRepo.save(sponsor);
-			return new ResponseEntity<>(s, HttpStatus.OK);
-		} catch (CustomException e) {
-			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
-		} catch (Exception e) {
-			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
-		}
-	}
 	public SponsorDeepForm convertSponsorObjectToDeepForm(Sponsor sponsor) {
 		SponsorDeepForm sponsorDeepForm = new SponsorDeepForm();
 		sponsorDeepForm.setId(sponsor.getId());
@@ -135,8 +123,48 @@ public class SponsorService {
 			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
 		}
 	}
+	public Sponsor  buildNewSponsorFromData(HttpServletRequest req) throws CustomException {
+		Sponsor sponsor = new Sponsor();
+		try {
+			String name = req.getParameter("name");
+			if (name != null)
+				sponsor.setName(name);
+			String description = req.getParameter("description");
+			sponsor.setDescription(description);
+			Address address = new Address();
+			String street = req.getParameter("street");
+			address.setStreet(street);
+			String city = req.getParameter("city");
+			address.setCity(city);
+			String state = req.getParameter("state");
+			address.setState(state);
+			String zip = req.getParameter("zip");
+			address.setZip(zip);
+			sponsor.setAddress(address);
+		} catch (Exception e) {
+			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return sponsor;
+	}
 	
+	public ResponseEntity<Object> updateSponsorById( HttpServletRequest req, Long sponsorId) {
+		Sponsor new_sponsor;
+		try {
+			if (sponsorId == null)
+				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+			Optional<Sponsor> sponsor = sponsorRepo.findById(sponsorId);
+			if (!sponsor.isPresent()) {
+				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+			} else {
+				new_sponsor = buildNewSponsorFromData(req);
+				Sponsor s = sponsorRepo.save(new_sponsor);
+				return new ResponseEntity<>(convertSponsorObjectToDeepForm(s), HttpStatus.OK);
+			}
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
+		} catch (Exception e) {
+			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
+		}
+	}
 	
-
-
 }

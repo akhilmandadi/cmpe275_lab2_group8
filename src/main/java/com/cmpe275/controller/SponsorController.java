@@ -16,8 +16,8 @@ public class SponsorController {
 	private SponsorService SponsorService;
 
 	@PostMapping
-	public ResponseEntity<Object> createSponsor(HttpServletRequest req) {
-		return SponsorService.createNewSponsor(req);
+	public ResponseEntity<Object> createSponsor(HttpServletRequest request) {
+		return SponsorService.createNewSponsor(request);
 	}
 	
 	@GetMapping("/{id}")
@@ -28,5 +28,10 @@ public class SponsorController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSponsor(HttpServletRequest request, @PathVariable("id") long id) {
 		return SponsorService.deleteSponsorById((long) id);
+	}
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateSponsor(HttpServletRequest request, @PathVariable("id") long id) {
+		return SponsorService.updateSponsorById(request, (long) id);
 	}
 }
