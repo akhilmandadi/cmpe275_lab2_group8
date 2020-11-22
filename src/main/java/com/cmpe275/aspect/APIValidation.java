@@ -26,5 +26,12 @@ public class APIValidation {
 			throw new ValidationException("Lastname is missing which is required parameter.");
 		}
 	}
+	
+	@Before("execution(public * com.cmpe275.controller.SponsorController.createSponsor(..)) && args(request)")
+	public void ValidateCreateSponsorAPI(JoinPoint joinPoint, HttpServletRequest request) {
+		if (request.getParameter("name") == null || request.getParameter("name") == "") {
+			throw new ValidationException("Sponsor name is missing which is required parameter.");
+		}
+	}
 
 }
