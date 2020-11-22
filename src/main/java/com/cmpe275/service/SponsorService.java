@@ -1,6 +1,8 @@
 package com.cmpe275.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 import com.cmpe275.Exception.CustomException;
 import com.cmpe275.entity.Address;
-import com.cmpe275.entity.Player;
 import com.cmpe275.entity.Sponsor;
-import com.cmpe275.repo.PlayerRepo;
+import com.cmpe275.models.PlayerShallowForm;
+import com.cmpe275.models.SponsorDeepForm;
 import com.cmpe275.repo.SponsorRepo;
 
 
@@ -72,6 +74,42 @@ public class SponsorService {
 			sponsor = buildSponsorFromData(req);
 			Sponsor s = sponsorRepo.save(sponsor);
 			return new ResponseEntity<>(s, HttpStatus.OK);
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
+		} catch (Exception e) {
+			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
+		}
+	}
+	public SponsorDeepForm convertSponsorObjectToDeepForm(Sponsor sponsor) {
+		SponsorDeepForm sponsorDeepForm = new SponsorDeepForm();
+		sponsorDeepForm.setId(sponsor.getId());
+		sponsorDeepForm.setName(sponsor.getName());
+		sponsorDeepForm.setDescription(sponsor.getDescription());
+		sponsorDeepForm.setAddress(sponsor.getAddress());
+		if (sponsor.getPlayers()!= null) {
+			List<PlayerShallowForm> playerList = new ArrayList<PlayerShallowForm>();
+			sponsor.getPlayers().forEach((p) -> {
+				PlayerShallowForm playerShallowForm = new PlayerShallowForm(p.getId(), p.getFirstname(),
+						p.getLastname(), p.getEmail(), p.getDescription(), p.getAddress());
+				playerList.add(playerShallowForm);
+			});
+			sponsorDeepForm.setPlayers(playerList);       
+		}
+		
+
+		return sponsorDeepForm;
+	}
+
+	public ResponseEntity<Object> getSponsorById(Long sponsorId) {
+		try {
+			if (sponsorId == null)
+				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+			Optional<Sponsor> sponsor = sponsorRepo.findById(sponsorId);
+			if (!sponsor.isPresent()) {
+				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<>(convertSponsorObjectToDeepForm(sponsor.get()), HttpStatus.OK);
+			}
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
 		} catch (Exception e) {

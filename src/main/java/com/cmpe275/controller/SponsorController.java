@@ -20,9 +20,9 @@ public class SponsorController {
 		return SponsorService.createNewSponsor(req);
 	}
 	
-	@GetMapping
-	public ResponseEntity<Object> getSponsor(HttpServletRequest req) {
-		return SponsorService.getSponsor(req);
+	@GetMapping("/{id}")
+	public ResponseEntity<Object> getSponsor(HttpServletRequest request, @PathVariable("id") long id) {
+		return SponsorService.getSponsorById((long) id);
 	}
 
 
