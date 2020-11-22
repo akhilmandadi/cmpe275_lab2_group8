@@ -1,5 +1,7 @@
 package com.cmpe275.service;
 
+import java.util.*;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,9 @@ import org.springframework.stereotype.Service;
 import com.cmpe275.Exception.CustomException;
 import com.cmpe275.entity.Address;
 import com.cmpe275.entity.Player;
+import com.cmpe275.models.PlayerDeepForm;
+import com.cmpe275.models.PlayerShallowForm;
+import com.cmpe275.models.SponsorShallowForm;
 import com.cmpe275.repo.PlayerRepo;
 import com.cmpe275.repo.SponsorRepo;
 
@@ -27,7 +32,7 @@ public class PlayerService {
 		try {
 			player = buildPlayerFromData(req);
 			Player p = playerRepo.save(player);
-			return new ResponseEntity<>(p, HttpStatus.OK);
+			return new ResponseEntity<>(convertPlayerObjectToDeepForm(p), HttpStatus.OK);
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
 		} catch (Exception e) {
@@ -86,4 +91,48 @@ public class PlayerService {
 		return player;
 	}
 
+	public PlayerDeepForm convertPlayerObjectToDeepForm(Player player) {
+		PlayerDeepForm playerDeepForm = new PlayerDeepForm();
+		playerDeepForm.setId(player.getId());
+		playerDeepForm.setEmail(player.getEmail());
+		playerDeepForm.setFirstname(player.getFirstname());
+		playerDeepForm.setLastname(player.getLastname());
+		playerDeepForm.setAddress(player.getAddress());
+		playerDeepForm.setDescription(player.getDescription());
+		if (player.getSponsor() != null) {
+			SponsorShallowForm sponsorShallowForm = new SponsorShallowForm();
+			sponsorShallowForm.setId(player.getSponsor().getId());
+			sponsorShallowForm.setName(player.getSponsor().getName());
+			sponsorShallowForm.setDescription(player.getSponsor().getDescription());
+			sponsorShallowForm.setAddress(player.getSponsor().getAddress());
+			playerDeepForm.setSponsor(sponsorShallowForm);
+		}
+		if (player.getOpponents() != null) {
+			List<PlayerShallowForm> playerList = new ArrayList<PlayerShallowForm>();
+			player.getOpponents().forEach((p) -> {
+				PlayerShallowForm playerShallowForm = new PlayerShallowForm(p.getId(), p.getFirstname(),
+						p.getLastname(), p.getEmail(), p.getDescription(), p.getAddress());
+				playerList.add(playerShallowForm);
+			});
+			playerDeepForm.setOpponents(playerList);
+		}
+		return playerDeepForm;
+	}
+
+	public ResponseEntity<Object> getPlayerById(Long playerId) {
+		try {
+			if (playerId == null)
+				throw new CustomException("Player Id is Invalid", HttpStatus.BAD_REQUEST);
+			Optional<Player> player = playerRepo.findById(playerId);
+			if (!player.isPresent()) {
+				return new ResponseEntity<>("Player Id Invalid", HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<>(convertPlayerObjectToDeepForm(player.get()), HttpStatus.OK);
+			}
+		} catch (CustomException e) {
+			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
+		} catch (Exception e) {
+			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
+		}
+	}
 }
