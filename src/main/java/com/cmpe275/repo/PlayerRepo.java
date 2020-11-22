@@ -18,6 +18,6 @@ public interface PlayerRepo extends JpaRepository<Player, Long> {
     public Optional<Player> getById(long id);
 
     public Optional<Player> getPlayerByEmail(String email);
-
+    
 	public Optional<Player> findByEmail(String parameter);
 }
