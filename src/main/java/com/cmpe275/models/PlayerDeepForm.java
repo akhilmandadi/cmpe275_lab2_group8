@@ -11,7 +11,7 @@ public class PlayerDeepForm {
 	private String lastname;
 	private String email;
 	private String description;
-	private Address address;
+	private AddressModel address;
 	private SponsorShallowForm sponsor;
 	private List<PlayerShallowForm> opponents;
 	
@@ -59,11 +59,11 @@ public class PlayerDeepForm {
 		this.description = description;
 	}
 
-	public Address getAddress() {
+	public AddressModel getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressModel address) {
 		this.address = address;
 	}
 

@@ -6,7 +6,7 @@ public class SponsorShallowForm {
 	private long id;
 	private String name;
 	private String description;
-	private Address address;
+	private AddressModel address;
 
 	public SponsorShallowForm() {
 
@@ -36,11 +36,11 @@ public class SponsorShallowForm {
 		this.description = description;
 	}
 
-	public Address getAddress() {
+	public AddressModel getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressModel address) {
 		this.address = address;
 	}
 }

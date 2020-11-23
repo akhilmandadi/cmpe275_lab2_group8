@@ -12,7 +12,7 @@ public class SponsorDeepForm {
 	private long id;
 	private String name;
 	private String description;
-	private Address address;
+	private AddressModel address;
 	private List<PlayerShallowForm> players;
 
 	public SponsorDeepForm() {
@@ -43,11 +43,11 @@ public class SponsorDeepForm {
 		this.description = description;
 	}
 
-	public Address getAddress() {
+	public AddressModel getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressModel address) {
 		this.address = address;
 	}
 

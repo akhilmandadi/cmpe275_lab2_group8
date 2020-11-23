@@ -13,6 +13,7 @@ import com.cmpe275.Exception.CustomException;
 import com.cmpe275.entity.Address;
 import com.cmpe275.entity.Player;
 import com.cmpe275.entity.Sponsor;
+import com.cmpe275.models.AddressModel;
 import com.cmpe275.models.PlayerDeepForm;
 import com.cmpe275.models.PlayerShallowForm;
 import com.cmpe275.models.SponsorDeepForm;
@@ -79,8 +80,6 @@ public class PlayerService {
 
 			if (req.getParameter("sponsor") != null) {
 				Long sponsorId = Long.parseLong(req.getParameter("sponsor"));
-				System.out.println(sponsorId);
-				System.out.println(sponsorId.getClass().getName());
 				if (sponsorRepo.getById(sponsorId).isPresent()) {
 					player.setSponsor(sponsorRepo.getById(sponsorId).get());
 				} else {
@@ -101,21 +100,58 @@ public class PlayerService {
 		playerDeepForm.setEmail(player.getEmail());
 		playerDeepForm.setFirstname(player.getFirstname());
 		playerDeepForm.setLastname(player.getLastname());
-		playerDeepForm.setAddress(player.getAddress());
+		AddressModel address = new AddressModel();
+		if (player.getAddress() != null) {
+			if (player.getAddress().getStreet() != null)
+				address.setStreet(player.getAddress().getStreet());
+			if (player.getAddress().getCity() != null)
+				address.setCity(player.getAddress().getCity());
+			if (player.getAddress().getState() != null)
+				address.setState(player.getAddress().getState());
+			if (player.getAddress().getZip() != null)
+				address.setZip(player.getAddress().getZip());
+		}
+		playerDeepForm.setAddress(address);
 		playerDeepForm.setDescription(player.getDescription());
 		if (player.getSponsor() != null) {
 			SponsorShallowForm sponsorShallowForm = new SponsorShallowForm();
 			sponsorShallowForm.setId(player.getSponsor().getId());
 			sponsorShallowForm.setName(player.getSponsor().getName());
 			sponsorShallowForm.setDescription(player.getSponsor().getDescription());
-			sponsorShallowForm.setAddress(player.getSponsor().getAddress());
+
+			AddressModel sponsorAddress = new AddressModel();
+			if (player.getSponsor().getAddress() != null) {
+				if (player.getSponsor().getAddress().getStreet() != null)
+					sponsorAddress.setStreet(player.getSponsor().getAddress().getStreet());
+				if (player.getSponsor().getAddress().getCity() != null)
+					sponsorAddress.setCity(player.getSponsor().getAddress().getCity());
+				if (player.getSponsor().getAddress().getState() != null)
+					sponsorAddress.setState(player.getSponsor().getAddress().getState());
+				if (player.getSponsor().getAddress().getZip() != null)
+					sponsorAddress.setZip(player.getSponsor().getAddress().getZip());
+			}
+			sponsorShallowForm.setAddress(sponsorAddress);
+
 			playerDeepForm.setSponsor(sponsorShallowForm);
 		}
 		if (player.getOpponents() != null) {
 			List<PlayerShallowForm> playerList = new ArrayList<PlayerShallowForm>();
 			player.getOpponents().forEach((p) -> {
+				
+				AddressModel opponentAddress = new AddressModel();
+				if (p.getAddress() != null) {
+					if (p.getAddress().getStreet() != null)
+						opponentAddress.setStreet(p.getAddress().getStreet());
+					if (p.getAddress().getCity() != null)
+						opponentAddress.setCity(p.getAddress().getCity());
+					if (p.getAddress().getState() != null)
+						opponentAddress.setState(p.getAddress().getState());
+					if (p.getAddress().getZip() != null)
+						opponentAddress.setZip(p.getAddress().getZip());
+				}
+				
 				PlayerShallowForm playerShallowForm = new PlayerShallowForm(p.getId(), p.getFirstname(),
-						p.getLastname(), p.getEmail(), p.getDescription(), p.getAddress());
+						p.getLastname(), p.getEmail(), p.getDescription(), opponentAddress);
 				playerList.add(playerShallowForm);
 			});
 			playerDeepForm.setOpponents(playerList);
@@ -136,10 +172,11 @@ public class PlayerService {
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	public ResponseEntity<Object> deletePlayerById(Long playerId) {
 		try {
 			if (playerId == null)
@@ -148,16 +185,16 @@ public class PlayerService {
 			if (!player.isPresent()) {
 				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
 			} else {
-				PlayerDeepForm temp=convertPlayerObjectToDeepForm(player.get());
-				if (player.get().getOpponents()!= null) {
+				PlayerDeepForm temp = convertPlayerObjectToDeepForm(player.get());
+				if (player.get().getOpponents() != null) {
 					player.get().getOpponents().forEach((p) -> {
 						p.getOpponents().remove(player.get());
 						playerRepo.save(p);
-					});    
+					});
 				}
-				if(player.get().getSponsor()!=null && player.get().getSponsor().getPlayers()!= null) {
+				if (player.get().getSponsor() != null && player.get().getSponsor().getPlayers() != null) {
 					player.get().getSponsor().getPlayers().remove(player.get());
-						sponsorRepo.save(player.get().getSponsor());  
+					sponsorRepo.save(player.get().getSponsor());
 				}
 				playerRepo.deleteById(playerId);
 				return new ResponseEntity<>(temp, HttpStatus.OK);

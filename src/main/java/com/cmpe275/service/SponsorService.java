@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.cmpe275.Exception.CustomException;
 import com.cmpe275.entity.Address;
 import com.cmpe275.entity.Sponsor;
+import com.cmpe275.models.AddressModel;
 import com.cmpe275.models.PlayerShallowForm;
 import com.cmpe275.models.SponsorDeepForm;
 import com.cmpe275.repo.SponsorRepo;
@@ -77,13 +78,38 @@ public class SponsorService {
 		sponsorDeepForm.setId(sponsor.getId());
 		sponsorDeepForm.setName(sponsor.getName());
 		sponsorDeepForm.setDescription(sponsor.getDescription());
-		System.out.println(sponsor.getAddress());
-		sponsorDeepForm.setAddress(sponsor.getAddress());
+		
+		AddressModel address = new AddressModel();
+		if (sponsor.getAddress() != null) {
+			if (sponsor.getAddress().getStreet() != null)
+				address.setStreet(sponsor.getAddress().getStreet());
+			if (sponsor.getAddress().getCity() != null)
+				address.setCity(sponsor.getAddress().getCity());
+			if (sponsor.getAddress().getState() != null)
+				address.setState(sponsor.getAddress().getState());
+			if (sponsor.getAddress().getZip() != null)
+				address.setZip(sponsor.getAddress().getZip());
+		}
+		sponsorDeepForm.setAddress(address);
+
 		if (sponsor.getPlayers()!= null) {
 			List<PlayerShallowForm> playerList = new ArrayList<PlayerShallowForm>();
 			sponsor.getPlayers().forEach((p) -> {
+				
+				AddressModel playerAddress = new AddressModel();
+				if (p.getAddress() != null) {
+					if (p.getAddress().getStreet() != null)
+						playerAddress.setStreet(p.getAddress().getStreet());
+					if (p.getAddress().getCity() != null)
+						playerAddress.setCity(p.getAddress().getCity());
+					if (p.getAddress().getState() != null)
+						playerAddress.setState(p.getAddress().getState());
+					if (p.getAddress().getZip() != null)
+						playerAddress.setZip(p.getAddress().getZip());
+				}
+				
 				PlayerShallowForm playerShallowForm = new PlayerShallowForm(p.getId(), p.getFirstname(),
-						p.getLastname(), p.getEmail(), p.getDescription(), p.getAddress());
+						p.getLastname(), p.getEmail(), p.getDescription(), playerAddress);
 				playerList.add(playerShallowForm);
 			});
 			sponsorDeepForm.setPlayers(playerList);       

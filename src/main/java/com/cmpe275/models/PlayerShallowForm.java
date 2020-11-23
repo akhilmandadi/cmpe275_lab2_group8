@@ -9,10 +9,10 @@ public class PlayerShallowForm {
 	private String lastname;
 	private String email;
 	private String description;
-	private Address address;
+	private AddressModel address;
 
 	public PlayerShallowForm(Long id, String firstname, String lastName, String email, String description,
-			Address address) {
+			AddressModel address) {
 		this.id = id;
 		this.firstname = firstname;
 		this.lastname = lastName;
@@ -65,11 +65,11 @@ public class PlayerShallowForm {
 		this.description = description;
 	}
 
-	public Address getAddress() {
+	public AddressModel getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressModel address) {
 		this.address = address;
 	}
 
