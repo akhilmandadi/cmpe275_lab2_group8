@@ -12,7 +12,9 @@ import com.cmpe275.entity.Player;
 import com.cmpe275.entity.Sponsor;
 
 import java.util.Optional;
-
+/*
+ * Player Repository Interface for all the methods 
+ */
 @Transactional
 @Repository
 public interface PlayerRepo extends JpaRepository<Player, Long> {

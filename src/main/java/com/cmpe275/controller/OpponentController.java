@@ -13,12 +13,14 @@ public class OpponentController {
 
 	@Autowired
 	private OpponentService opponentService;
-
+    
+//	add Opponent API Route
 	@PutMapping("/{id1}/{id2}")
 	public ResponseEntity<Object> addOpponent(@PathVariable("id1") long id1, @PathVariable("id2") long id2) {
 		return opponentService.addOpponent((long) id1, (long)id2);
 	}
 	
+//	Delete Opponent API Route
 	@DeleteMapping("/{id1}/{id2}")
 	public ResponseEntity<Object> deleteOpponent(@PathVariable("id1") long id1, @PathVariable("id2") long id2) {
 		return opponentService.deleteOpponent((long) id1, (long)id2);

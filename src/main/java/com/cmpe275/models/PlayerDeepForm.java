@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.cmpe275.entity.Address;
 
+/*
+ * Model Structure for Player Deep Form
+ */
 public class PlayerDeepForm {
 
 	private Long id;

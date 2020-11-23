@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+//Sponsor Entity
 @Entity
 public class Sponsor implements Serializable {
 

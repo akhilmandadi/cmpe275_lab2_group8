@@ -2,6 +2,8 @@ package com.cmpe275.entity;
 
 import javax.persistence.Embeddable;
 
+
+//Address Entity in MySQL
 @Embeddable
 public class Address {
 	

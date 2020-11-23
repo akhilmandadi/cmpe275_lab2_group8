@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public class CustomException extends Exception {
 	/**
+	 Exceptions to handle Error Code
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;

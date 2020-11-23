@@ -8,6 +8,9 @@ import net.bytebuddy.dynamic.scaffold.MethodGraph;
 import java.util.LinkedList;
 import java.util.List;
 
+/*
+ * Model Structure for Sponsor Deep Form
+ */
 public class SponsorDeepForm {
 	private long id;
 	private String name;

@@ -1,5 +1,8 @@
 package com.cmpe275.models;
 
+/*
+ * Model for Address Entity
+ */
 public class AddressModel {
 	private String street;
 	private String city;

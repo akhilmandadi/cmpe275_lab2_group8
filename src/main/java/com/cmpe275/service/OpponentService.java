@@ -15,6 +15,9 @@ import com.cmpe275.repo.PlayerRepo;
 @Service
 public class OpponentService {
 
+	/*
+	 * Add Opponent implementation makes the two players with the given IDs opponents with each other
+	 */
 	@Autowired
 	private PlayerRepo playerRepo;
 
@@ -56,6 +59,9 @@ public class OpponentService {
 		}
 	}
 	
+	/*
+	 *  delete opponent removes the opponent relation between the two players
+	 */
 	public ResponseEntity<Object> deleteOpponent(Long id1, Long id2) {
 		try {
 			if (id1 == id2) {

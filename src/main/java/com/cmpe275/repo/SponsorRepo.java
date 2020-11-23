@@ -12,6 +12,9 @@ import com.cmpe275.entity.Sponsor;
 
 import java.util.Optional;
 
+/*
+ * Sponser Repository Interface which includes all the method signatures for sponsors
+ */
 @Transactional
 @Repository
 public interface  SponsorRepo extends JpaRepository<Sponsor , Long> {

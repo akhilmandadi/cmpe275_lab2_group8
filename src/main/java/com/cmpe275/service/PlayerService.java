@@ -28,6 +28,10 @@ public class PlayerService {
 	@Autowired
 	private SponsorRepo sponsorRepo;
 
+	/*
+	 * createNewPlayer creates a player object. 
+
+	 */
 	public ResponseEntity<Object> createNewPlayer(HttpServletRequest req) {
 		Player player;
 		try {
@@ -41,6 +45,10 @@ public class PlayerService {
 		}
 	}
 
+	/*
+	 * buildPlayerFromData method updates a player object, and returns the full player object.
+ 
+	 */
 	public Player buildPlayerFromData(HttpServletRequest req) throws CustomException {
 		Player player = new Player();
 		try {
@@ -92,6 +100,9 @@ public class PlayerService {
 		return player;
 	}
 
+	/*
+	 * checkPlayerIsExisting checks if the player for given id on request exists or not
+	 */
 	public Player checkPlayerIsExisting(HttpServletRequest req, long id) throws CustomException {
 		Player player;
 		try {
@@ -150,6 +161,9 @@ public class PlayerService {
 		return player;
 	}
 
+	/*
+	 * updateExistingPlayer method updates the details accordingly on reqeust
+	 */
 	public ResponseEntity<Object> updateExistingPlayer(HttpServletRequest req, long id) {
 		Player player;
 		try {
@@ -163,6 +177,9 @@ public class PlayerService {
 		}
 	}
 
+	/*
+	 * convertPlayerObjectToDeepForm  method converts the player object to deep form
+	 */
 	public PlayerDeepForm convertPlayerObjectToDeepForm(Player player) {
 		PlayerDeepForm playerDeepForm = new PlayerDeepForm();
 		playerDeepForm.setId(player.getId());
@@ -228,6 +245,9 @@ public class PlayerService {
 		return playerDeepForm;
 	}
 
+	/*
+	 * getPlayerById method return the player object on requesting with the player id
+	 */
 	public ResponseEntity<Object> getPlayerById(Long playerId) {
 		try {
 			if (playerId == null)
@@ -246,6 +266,9 @@ public class PlayerService {
 		}
 	}
 
+	/*
+	 * deletePlayerById method deletes the player object on requesting with playerid
+	 */
 	public ResponseEntity<Object> deletePlayerById(Long playerId) {
 		try {
 			if (playerId == null)

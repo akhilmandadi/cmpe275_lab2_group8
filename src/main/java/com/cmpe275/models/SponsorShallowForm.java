@@ -2,6 +2,9 @@ package com.cmpe275.models;
 
 import com.cmpe275.entity.Address;
 
+/*
+ * Model Structure for Sponsor Shallow Form
+ */
 public class SponsorShallowForm {
 	private long id;
 	private String name;

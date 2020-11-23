@@ -2,6 +2,9 @@ package com.cmpe275.models;
 
 import com.cmpe275.entity.Address;
 
+/*
+ * Model Structure for Player Shallow form
+ */
 public class PlayerShallowForm {
 
 	private Long id;

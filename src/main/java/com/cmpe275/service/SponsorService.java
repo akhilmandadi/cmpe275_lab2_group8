@@ -28,7 +28,10 @@ public class SponsorService {
 
 	@Autowired
 	private PlayerRepo playerRepo;
+/*
+ *createNewSponsor method creates a sponsor object. 
 
+ */
 	public ResponseEntity<Object> createNewSponsor(HttpServletRequest req) {
 		Sponsor sponsor;
 		try {
@@ -42,6 +45,9 @@ public class SponsorService {
 		}
 	}
 
+	/*
+	 * buildSponsorFromData returns the updated sponsor object, including all attributes in JSON
+	 */
 	public Sponsor buildSponsorFromData(HttpServletRequest req) throws CustomException {
 		Sponsor sponsor = new Sponsor();
 		try {
@@ -72,6 +78,9 @@ public class SponsorService {
 		return sponsor;
 	}
 
+	/*
+	 * convertSponsorObjectToDeepForm converts the sponsor object to deep form
+	 */
 	public SponsorDeepForm convertSponsorObjectToDeepForm(Sponsor sponsor) {
 		SponsorDeepForm sponsorDeepForm = new SponsorDeepForm();
 		sponsorDeepForm.setId(sponsor.getId());
@@ -117,6 +126,9 @@ public class SponsorService {
 		return sponsorDeepForm;
 	}
 
+	/*
+	 * getSponsorById returns a full sponsor object in JSON in its HTTP payload. 
+	 */
 	public ResponseEntity<Object> getSponsorById(Long sponsorId) {
 		try {
 			if (sponsorId == null)
@@ -134,6 +146,9 @@ public class SponsorService {
 		}
 	}
 
+	/*
+	 * deleteSponsorById deletes the sponsor from the database
+	 */
 	public ResponseEntity<Object> deleteSponsorById(Long sponsorId) {
 		try {
 			if (sponsorId == null)
@@ -160,6 +175,9 @@ public class SponsorService {
 		}
 	}
 
+	/*
+	 * buildNewSponsorFromData method creates the sponsor with the given fields
+	 */
 	public Sponsor buildNewSponsorFromData(HttpServletRequest req, Sponsor oldSponsor) throws CustomException {
 		Sponsor sponsor = new Sponsor();
 		try {
@@ -194,6 +212,9 @@ public class SponsorService {
 		return sponsor;
 	}
 
+	/*
+	 * updateSponsorById method updates the sponsor object
+	 */
 	public ResponseEntity<Object> updateSponsorById(HttpServletRequest req, Long sponsorId) {
 		Sponsor new_sponsor;
 		try {
