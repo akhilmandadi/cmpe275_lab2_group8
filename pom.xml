@@ -7,7 +7,7 @@
 	<groupId>com</groupId>
 	<artifactId>cmpe275</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>MVC 1.0 Blank Project (from https://github.com/making/mvc-1.0-blank)</name>
 
@@ -137,6 +137,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		
 	</build>
 
 
