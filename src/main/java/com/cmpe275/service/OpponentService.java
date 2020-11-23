@@ -21,17 +21,17 @@ public class OpponentService {
 	public ResponseEntity<Object> addOpponent(Long id1, Long id2) {
 		try {
 			if (id1 == id2) {
-				throw new CustomException("Player ids same", HttpStatus.NOT_FOUND);
+				throw new CustomException("Player ids same", HttpStatus.BAD_REQUEST);
 			}
 
 			Optional<Player> player1 = playerRepo.getById(id1);
 			if (player1.isEmpty()) {
-				throw new CustomException("Player id Invalid", HttpStatus.NOT_FOUND);
+				throw new CustomException("First Player id Invalid", HttpStatus.NOT_FOUND);
 			}
 
 			Optional<Player> player2 = playerRepo.getById(id2);
 			if (player2.isEmpty()) {
-				throw new CustomException("Player id Invalid", HttpStatus.NOT_FOUND);
+				throw new CustomException("Second Player id Invalid", HttpStatus.NOT_FOUND);
 			}
 
 			Player p1 = player1.get();
@@ -59,17 +59,17 @@ public class OpponentService {
 	public ResponseEntity<Object> deleteOpponent(Long id1, Long id2) {
 		try {
 			if (id1 == id2) {
-				throw new CustomException("Player ids same", HttpStatus.NOT_FOUND);
+				throw new CustomException("Player ids same", HttpStatus.BAD_REQUEST);
 			}
 
 			Optional<Player> player1 = playerRepo.getById(id1);
 			if (player1.isEmpty()) {
-				throw new CustomException("Player id Invalid", HttpStatus.NOT_FOUND);
+				throw new CustomException("First Player id Invalid", HttpStatus.NOT_FOUND);
 			}
 
 			Optional<Player> player2 = playerRepo.getById(id2);
 			if (player2.isEmpty()) {
-				throw new CustomException("Player id Invalid", HttpStatus.NOT_FOUND);
+				throw new CustomException("Second Player id Invalid", HttpStatus.NOT_FOUND);
 			}
 
 			Player p1 = player1.get();

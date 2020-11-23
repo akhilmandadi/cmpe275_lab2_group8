@@ -45,7 +45,7 @@ public class PlayerService {
 		Player player = new Player();
 		try {
 			if (playerRepo.findByEmail(req.getParameter("email")).isPresent()) {
-				throw new CustomException("Player Already exists with given Email", HttpStatus.BAD_REQUEST);
+				throw new CustomException("Player Already exists with given Email", HttpStatus.CONFLICT);
 			}
 			String firstname = req.getParameter("firstname");
 			if (firstname != null)
@@ -81,7 +81,7 @@ public class PlayerService {
 				if (sponsorRepo.getById(sponsorId).isPresent()) {
 					player.setSponsor(sponsorRepo.getById(sponsorId).get());
 				} else {
-					throw new CustomException("Sponsor doesnt exist with given id", HttpStatus.BAD_REQUEST);
+					throw new CustomException("Sponsor doesnt exist with given id", HttpStatus.NOT_FOUND);
 				}
 			}
 		} catch (CustomException e) {
@@ -136,7 +136,7 @@ public class PlayerService {
 				if (sponsorRepo.getById(sponsorId).isPresent()) {
 					player.setSponsor(sponsorRepo.getById(sponsorId).get());
 				} else {
-					throw new CustomException("Sponsor doesnt exist with given id", HttpStatus.BAD_REQUEST);
+					throw new CustomException("Sponsor doesnt exist with given id", HttpStatus.NOT_FOUND);
 				}
 			} else {
 				
@@ -231,10 +231,10 @@ public class PlayerService {
 	public ResponseEntity<Object> getPlayerById(Long playerId) {
 		try {
 			if (playerId == null)
-				throw new CustomException("Player Id is Invalid", HttpStatus.BAD_REQUEST);
+				throw new CustomException("Player Id is Invalid", HttpStatus.NOT_FOUND);
 			Optional<Player> player = playerRepo.findById(playerId);
 			if (!player.isPresent()) {
-				return new ResponseEntity<>("Player Id Invalid", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Player Id Invalid", HttpStatus.NOT_FOUND);
 			} else {
 				return new ResponseEntity<>(convertPlayerObjectToDeepForm(player.get()), HttpStatus.OK);
 			}
@@ -249,10 +249,10 @@ public class PlayerService {
 	public ResponseEntity<Object> deletePlayerById(Long playerId) {
 		try {
 			if (playerId == null)
-				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+				throw new CustomException("Player ID  is Invalid", HttpStatus.NOT_FOUND);
 			Optional<Player> player = playerRepo.findById(playerId);
 			if (!player.isPresent()) {
-				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Player id is Invalid", HttpStatus.NOT_FOUND);
 			} else {
 				PlayerDeepForm temp = convertPlayerObjectToDeepForm(player.get());
 				if (player.get().getOpponents() != null) {

@@ -32,7 +32,6 @@ public class SponsorService {
 	public ResponseEntity<Object> createNewSponsor(HttpServletRequest req) {
 		Sponsor sponsor;
 		try {
-
 			sponsor = buildSponsorFromData(req);
 			Sponsor s = sponsorRepo.save(sponsor);
 			return new ResponseEntity<>(s, HttpStatus.OK);
@@ -121,10 +120,10 @@ public class SponsorService {
 	public ResponseEntity<Object> getSponsorById(Long sponsorId) {
 		try {
 			if (sponsorId == null)
-				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+				throw new CustomException("sponsorId  is Invalid", HttpStatus.NOT_FOUND);
 			Optional<Sponsor> sponsor = sponsorRepo.findById(sponsorId);
 			if (!sponsor.isPresent()) {
-				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.NOT_FOUND);
 			} else {
 				return new ResponseEntity<>(convertSponsorObjectToDeepForm(sponsor.get()), HttpStatus.OK);
 			}
@@ -138,10 +137,10 @@ public class SponsorService {
 	public ResponseEntity<Object> deleteSponsorById(Long sponsorId) {
 		try {
 			if (sponsorId == null)
-				throw new CustomException("sponsorId  is Invalid", HttpStatus.BAD_REQUEST);
+				throw new CustomException("sponsorId  is Invalid", HttpStatus.NOT_FOUND);
 			Optional<Sponsor> sponsor = sponsorRepo.findById(sponsorId);
 			if (!sponsor.isPresent()) {
-				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("sponsor id not present", HttpStatus.NOT_FOUND);
 			} else {
 				SponsorDeepForm temp = convertSponsorObjectToDeepForm(sponsor.get());
 				if (sponsor.get().getPlayers() != null) {
