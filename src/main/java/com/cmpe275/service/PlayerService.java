@@ -12,11 +12,9 @@ import org.springframework.stereotype.Service;
 import com.cmpe275.Exception.CustomException;
 import com.cmpe275.entity.Address;
 import com.cmpe275.entity.Player;
-import com.cmpe275.entity.Sponsor;
 import com.cmpe275.models.AddressModel;
 import com.cmpe275.models.PlayerDeepForm;
 import com.cmpe275.models.PlayerShallowForm;
-import com.cmpe275.models.SponsorDeepForm;
 import com.cmpe275.models.SponsorShallowForm;
 import com.cmpe275.repo.PlayerRepo;
 import com.cmpe275.repo.SponsorRepo;
@@ -93,26 +91,30 @@ public class PlayerService {
 		}
 		return player;
 	}
-	
-	public Player checkPlayerIsExisting(HttpServletRequest req,long id) throws CustomException {
-		Player player = new Player();
+
+	public Player checkPlayerIsExisting(HttpServletRequest req, long id) throws CustomException {
+		Player player;
 		try {
 			if (!playerRepo.getById(id).isPresent()) {
 				throw new CustomException("Player does not exist with given Id", HttpStatus.NOT_FOUND);
 			}
+			player = new Player();
+			player.setId(playerRepo.getById(id).get().getId());
+			player.setOpponents(playerRepo.getById(id).get().getOpponents());
+			
 			String firstname = req.getParameter("firstname");
-			if (firstname != null)
-				player.setFirstname(firstname);
+			player.setFirstname(firstname);
+			
 			String lastname = req.getParameter("lastname");
-			if (lastname != null)
-				player.setLastname(lastname);
+			player.setLastname(lastname);
+			
 			String email = req.getParameter("email");
-			if (email != null)
-				player.setEmail(email);
+			player.setEmail(email);
+			
 			String description = req.getParameter("description");
-			if (description != null)
+			if(description!=null) {
 				player.setDescription(description);
-
+			}
 			Address address = new Address();
 			String street = req.getParameter("street");
 			if (street != null)
@@ -128,30 +130,30 @@ public class PlayerService {
 				address.setZip(zip);
 
 			player.setAddress(address);
-
+			
 			if (req.getParameter("sponsor") != null) {
 				Long sponsorId = Long.parseLong(req.getParameter("sponsor"));
-				System.out.println(sponsorId);
-				System.out.println(sponsorId.getClass().getName());
 				if (sponsorRepo.getById(sponsorId).isPresent()) {
 					player.setSponsor(sponsorRepo.getById(sponsorId).get());
 				} else {
 					throw new CustomException("Sponsor doesnt exist with given id", HttpStatus.BAD_REQUEST);
 				}
+			} else {
+				
 			}
 		} catch (CustomException e) {
 			throw new CustomException(e.getMessage(), e.getErrorCode());
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		return player;
 	}
 
-	
-	public ResponseEntity<Object> updateExistingPlayer(HttpServletRequest req,long id) {
+	public ResponseEntity<Object> updateExistingPlayer(HttpServletRequest req, long id) {
 		Player player;
 		try {
-			player = checkPlayerIsExisting(req,id);
+			player = checkPlayerIsExisting(req, id);
 			Player p = playerRepo.save(player);
 			return new ResponseEntity<>(convertPlayerObjectToDeepForm(p), HttpStatus.OK);
 		} catch (CustomException e) {
@@ -204,7 +206,7 @@ public class PlayerService {
 		if (player.getOpponents() != null) {
 			List<PlayerShallowForm> playerList = new ArrayList<PlayerShallowForm>();
 			player.getOpponents().forEach((p) -> {
-				
+
 				AddressModel opponentAddress = new AddressModel();
 				if (p.getAddress() != null) {
 					if (p.getAddress().getStreet() != null)
@@ -216,7 +218,7 @@ public class PlayerService {
 					if (p.getAddress().getZip() != null)
 						opponentAddress.setZip(p.getAddress().getZip());
 				}
-				
+
 				PlayerShallowForm playerShallowForm = new PlayerShallowForm(p.getId(), p.getFirstname(),
 						p.getLastname(), p.getEmail(), p.getDescription(), opponentAddress);
 				playerList.add(playerShallowForm);

@@ -21,19 +21,19 @@ public class PlayerController {
 	public ResponseEntity<Object> createPlayer(HttpServletRequest req) {
 		return playerService.createNewPlayer(req);
 	}
-	
+
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> updatePlayer(HttpServletRequest req,@PathVariable("id") long id) {
-		return playerService.updateExistingPlayer(req,(long)id);
+	public ResponseEntity<Object> updatePlayer(HttpServletRequest req, @PathVariable("id") long id) {
+		return playerService.updateExistingPlayer(req, (long) id);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<Object> getPlayer(HttpServletRequest request, @PathVariable("id") long id) {
 		return playerService.getPlayerById((long) id);
 	}
-    
-   @DeleteMapping("/{id}")
+
+	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deletePlayer(HttpServletRequest request, @PathVariable("id") long id) {
-			return playerService.deletePlayerById((long) id);
-    }
+		return playerService.deletePlayerById((long) id);
+	}
 }

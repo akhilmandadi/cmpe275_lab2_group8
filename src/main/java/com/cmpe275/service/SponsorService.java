@@ -20,20 +20,19 @@ import com.cmpe275.models.SponsorDeepForm;
 import com.cmpe275.repo.SponsorRepo;
 import com.cmpe275.repo.PlayerRepo;
 
-
 @Service
 public class SponsorService {
 
 	@Autowired
 	private SponsorRepo sponsorRepo;
-	
+
 	@Autowired
 	private PlayerRepo playerRepo;
 
 	public ResponseEntity<Object> createNewSponsor(HttpServletRequest req) {
 		Sponsor sponsor;
 		try {
-		
+
 			sponsor = buildSponsorFromData(req);
 			Sponsor s = sponsorRepo.save(sponsor);
 			return new ResponseEntity<>(s, HttpStatus.OK);
@@ -53,7 +52,7 @@ public class SponsorService {
 			String description = req.getParameter("description");
 			if (description != null)
 				sponsor.setDescription(description);
-			
+
 			Address address = new Address();
 			String street = req.getParameter("street");
 			if (street != null)
@@ -73,12 +72,13 @@ public class SponsorService {
 		}
 		return sponsor;
 	}
+
 	public SponsorDeepForm convertSponsorObjectToDeepForm(Sponsor sponsor) {
 		SponsorDeepForm sponsorDeepForm = new SponsorDeepForm();
 		sponsorDeepForm.setId(sponsor.getId());
 		sponsorDeepForm.setName(sponsor.getName());
 		sponsorDeepForm.setDescription(sponsor.getDescription());
-		
+
 		AddressModel address = new AddressModel();
 		if (sponsor.getAddress() != null) {
 			if (sponsor.getAddress().getStreet() != null)
@@ -92,10 +92,10 @@ public class SponsorService {
 		}
 		sponsorDeepForm.setAddress(address);
 
-		if (sponsor.getPlayers()!= null) {
+		if (sponsor.getPlayers() != null) {
 			List<PlayerShallowForm> playerList = new ArrayList<PlayerShallowForm>();
 			sponsor.getPlayers().forEach((p) -> {
-				
+
 				AddressModel playerAddress = new AddressModel();
 				if (p.getAddress() != null) {
 					if (p.getAddress().getStreet() != null)
@@ -107,14 +107,13 @@ public class SponsorService {
 					if (p.getAddress().getZip() != null)
 						playerAddress.setZip(p.getAddress().getZip());
 				}
-				
+
 				PlayerShallowForm playerShallowForm = new PlayerShallowForm(p.getId(), p.getFirstname(),
 						p.getLastname(), p.getEmail(), p.getDescription(), playerAddress);
 				playerList.add(playerShallowForm);
 			});
-			sponsorDeepForm.setPlayers(playerList);       
+			sponsorDeepForm.setPlayers(playerList);
 		}
-		
 
 		return sponsorDeepForm;
 	}
@@ -135,7 +134,7 @@ public class SponsorService {
 			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 	public ResponseEntity<Object> deleteSponsorById(Long sponsorId) {
 		try {
 			if (sponsorId == null)
@@ -144,33 +143,37 @@ public class SponsorService {
 			if (!sponsor.isPresent()) {
 				return new ResponseEntity<>("sponsor id is Invalid", HttpStatus.BAD_REQUEST);
 			} else {
-				SponsorDeepForm temp=convertSponsorObjectToDeepForm(sponsor.get());
-				if (sponsor.get().getPlayers()!= null) {
+				SponsorDeepForm temp = convertSponsorObjectToDeepForm(sponsor.get());
+				if (sponsor.get().getPlayers() != null) {
 					sponsor.get().getPlayers().forEach((p) -> {
 						p.setSponsor(null);
 						playerRepo.save(p);
-					});    
+					});
 				}
 				sponsorRepo.delete(sponsor.get());
 				return new ResponseEntity<>(temp, HttpStatus.OK);
 			}
-			
-			
+
 		} catch (CustomException e) {
 			return new ResponseEntity<>(e.getMessage(), e.getErrorCode());
 		} catch (Exception e) {
 			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
 		}
 	}
-	public Sponsor  buildNewSponsorFromData(HttpServletRequest req, Sponsor sponsor) throws CustomException {
+
+	public Sponsor buildNewSponsorFromData(HttpServletRequest req, Sponsor oldSponsor) throws CustomException {
+		Sponsor sponsor = new Sponsor();
 		try {
+			sponsor.setId(oldSponsor.getId());
+			sponsor.setPlayers(oldSponsor.getPlayers());
+
 			String name = req.getParameter("name");
-			if (name != null)
-				sponsor.setName(name);
+			sponsor.setName(name);
+
 			String description = req.getParameter("description");
 			if (description != null)
 				sponsor.setDescription(description);
-			
+
 			Address address = new Address();
 			String street = req.getParameter("street");
 			if (street != null)
@@ -191,13 +194,13 @@ public class SponsorService {
 		}
 		return sponsor;
 	}
-	
-	public ResponseEntity<Object> updateSponsorById( HttpServletRequest req, Long sponsorId) {
+
+	public ResponseEntity<Object> updateSponsorById(HttpServletRequest req, Long sponsorId) {
 		Sponsor new_sponsor;
 		try {
 			if (sponsorId == null)
 				throw new CustomException("sponsorId  is Invalid", HttpStatus.NOT_FOUND);
-			
+
 			Optional<Sponsor> sponsor = sponsorRepo.findById(sponsorId);
 			if (!sponsor.isPresent()) {
 				return new ResponseEntity<>("Sponsor Not present", HttpStatus.NOT_FOUND);
@@ -213,5 +216,5 @@ public class SponsorService {
 			return new ResponseEntity<>("Invalid Data", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
+
 }

@@ -7,8 +7,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
-
 import com.cmpe275.Exception.ValidationException;
 
 @Aspect
@@ -28,9 +26,10 @@ public class APIValidation {
 			throw new ValidationException("Lastname is missing which is required parameter.");
 		}
 	}
-	
-	@Before("execution(public * com.cmpe275.controller.PlayerController.updatePlayer(..)) && args(request)")
-	public void ValidateUpdatePlayerAPI(JoinPoint joinPoint, HttpServletRequest request) {
+
+	@Before("execution(public * com.cmpe275.controller.PlayerController.updatePlayer(..))")
+	public void ValidateUpdatePlayerAPI(JoinPoint joinPoint) {
+		HttpServletRequest request = (HttpServletRequest) joinPoint.getArgs()[0];
 		if (request.getParameter("email") == null || request.getParameter("email") == "") {
 			throw new ValidationException("Email is missing which is required parameter.");
 		}
@@ -41,16 +40,17 @@ public class APIValidation {
 			throw new ValidationException("Lastname is missing which is required parameter.");
 		}
 	}
-	
+
 	@Before("execution(public * com.cmpe275.controller.SponsorController.createSponsor(..)) && args(request)")
 	public void ValidateCreateSponsorAPI(JoinPoint joinPoint, HttpServletRequest request) {
 		if (request.getParameter("name") == null || request.getParameter("name") == "") {
 			throw new ValidationException("Sponsor name is missing which is required parameter.");
 		}
 	}
-	
-	@Before("execution(public * com.cmpe275.controller.SponsorController.updateSponsor(..)) && args(request) && args(id)")
-	public void ValidateUpdateSponsorAPI(JoinPoint joinPoint, HttpServletRequest request, @PathVariable("id") long id) {
+
+	@Before("execution(public * com.cmpe275.controller.SponsorController.updateSponsor(..)) ")
+	public void ValidateUpdateSponsorAPI(JoinPoint joinPoint) {
+		HttpServletRequest request = (HttpServletRequest) joinPoint.getArgs()[0];
 		if (request.getParameter("name") == null || request.getParameter("name") == "") {
 			throw new ValidationException("Sponsor name is missing which is required parameter.");
 		}
